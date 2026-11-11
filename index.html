@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Little Universe ♡</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --gold: #e9c77b;
+            --pink: #f4b9c9;
+            --white: #fffaf5;
+            --muted: #aaa1a8;
+            --bg: #050507;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: var(--bg);
+            color: var(--white);
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .screen {
+            min-height: 100vh;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 30px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen.active {
+            display: flex;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* BACKGROUND */
+
+        .stars {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: .15;
+                transform: scale(.7);
+            }
+
+            50% {
+                opacity: .9;
+                transform: scale(1.4);
+            }
+        }
+
+        .glow {
+            position: fixed;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            filter: blur(130px);
+            opacity: .10;
+            pointer-events: none;
+            background: #bd7199;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 540px;
+            text-align: center;
+        }
+
+        .eyebrow {
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            font-size: 10px;
+            margin-bottom: 25px;
+        }
+
+        h1,
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+        }
+
+        .main-title {
+            font-size: clamp(42px, 9vw, 68px);
+            line-height: 1.15;
+            margin-bottom: 18px;
+        }
+
+        .main-title em {
+            color: var(--pink);
+        }
+
+        .description {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.9;
+            max-width: 370px;
+            margin: 0 auto 35px;
+        }
+
+        /* INPUT */
+
+        .name-input {
+            width: 100%;
+            max-width: 350px;
+            padding: 17px 20px;
+            border: 1px solid #393039;
+            border-radius: 12px;
+            background: #111014;
+            color: white;
+            text-align: center;
+            outline: none;
+            font-size: 14px;
+            transition: .3s;
+        }
+
+        .name-input:focus {
+            border-color: var(--pink);
+            box-shadow: 0 0 25px #e9a7c01c;
+        }
+
+        .name-input::placeholder {
+            color: #77717a;
+        }
+
+        .primary-btn {
+            display: block;
+            margin: 20px auto 0;
+            padding: 15px 35px;
+            min-width: 180px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #f3d69a, #d9a7b7);
+            color: #171016;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: .3s;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px #e9b9cc30;
+        }
+
+        /* QUESTIONS */
+
+        .progress {
+            width: 100%;
+            height: 3px;
+            background: #242027;
+            border-radius: 10px;
+            margin-bottom: 35px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--pink), var(--gold));
+            transition: .5s;
+        }
+
+        .question-number {
+            color: var(--gold);
+            font-size: 11px;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+        }
+
+        .question-title {
+            font-size: clamp(30px, 7vw, 43px);
+            line-height: 1.35;
+            margin-bottom: 15px;
+        }
+
+        .question-subtitle {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 45px;
+        }
+
+        .answer-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            min-height: 65px;
+            position: relative;
+        }
+
+        .answer-btn {
+            width: 125px;
+            padding: 15px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            transition: .25s;
+        }
+
+        .yes-btn {
+            background: var(--pink);
+            color: #24151c;
+            border: 1px solid var(--pink);
+        }
+
+        .yes-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 30px #f4b9c955;
+        }
+
+        .no-btn {
+            background: transparent;
+            color: #b9b2b9;
+            border: 1px solid #49434c;
+            position: relative;
+            z-index: 10;
+        }
+
+        .no-btn.running {
+            position: fixed;
+            transition: left .18s ease, top .18s ease;
+        }
+
+        /* FLOWERS SCENE */
+
+        #garden {
+            min-height: 100vh;
+            justify-content: flex-end;
+            padding-bottom: 0;
+            overflow: hidden;
+        }
+
+        .garden-heading {
+            position: absolute;
+            top: 9%;
+            width: 100%;
+            padding: 0 15px;
+            text-align: center;
+            z-index: 5;
+        }
+
+        .garden-heading h2 {
+            font-size: clamp(28px, 6vw, 43px);
+            color: #f7d9df;
+        }
+
+        .garden-heading p {
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 2px;
+            margin-top: 12px;
+        }
+
+        .garden {
+            width: 100%;
+            height: 55vh;
+            min-height: 330px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 35px;
+            background: linear-gradient(180deg, #18231c, #0b100d);
+            border-top: 1px solid #344432;
+            border-radius: 50% 50% 0 0;
+            box-shadow: 0 -10px 50px #4e795522;
+        }
+
+        /* FLOWER */
+
+        .flower {
+            position: absolute;
+            bottom: 25px;
+            transform-origin: bottom center;
+            transform: scaleY(0);
+            animation: growFlower 3s ease-out forwards;
+        }
+
+        @keyframes growFlower {
+            0% {
+                transform: scaleY(0);
+            }
+
+            70% {
+                transform: scaleY(1.08);
+            }
+
+            100% {
+                transform: scaleY(1);
+            }
+        }
+
+        .sunflower {
+            left: calc(50% + 55px);
+            animation-delay: .8s;
+        }
+
+        .edelweiss {
+            left: calc(50% - 115px);
+            animation-delay: 1.6s;
+        }
+
+        .stem {
+            width: 5px;
+            height: 175px;
+            background: linear-gradient(90deg, #385f39, #789b56, #304b2f);
+            border-radius: 10px;
+            margin: auto;
+            position: relative;
+        }
+
+        .edelweiss .stem {
+            height: 125px;
+        }
+
+        .leaf {
+            position: absolute;
+            width: 35px;
+            height: 16px;
+            background: linear-gradient(120deg, #64894f, #294a32);
+            border-radius: 100% 0 100% 0;
+        }
+
+        .leaf.left {
+            left: -30px;
+            top: 65%;
+            transform: rotate(15deg);
+        }
+
+        .leaf.right {
+            right: -30px;
+            top: 45%;
+            transform: rotate(70deg) scaleX(-1);
+        }
+
+        /* SUNFLOWER HEAD */
+
+        .sun-head {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            top: -85px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bloom 2s 3s ease-out backwards;
+        }
+
+        @keyframes bloom {
+            0% {
+                transform: translateX(-50%) scale(0);
+            }
+
+            100% {
+                transform: translateX(-50%) scale(1);
+            }
+        }
+
+        .sun-petal {
+            position: absolute;
+            width: 25px;
+            height: 48px;
+            left: 38px;
+            top: 2px;
+            background: linear-gradient(180deg, #ffe99b, #e8a92c);
+            border-radius: 50%;
+            transform-origin: 12px 48px;
+            box-shadow: 0 0 8px #f9c75c44;
+        }
+
+        .sun-center {
+            position: absolute;
+            width: 43px;
+            height: 43px;
+            left: 29px;
+            top: 29px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #a35b20, #613512);
+            border: 3px dotted #d89a39;
+            z-index: 2;
+        }
+
+        /* EDELWEISS HEAD */
+
+        .edel-head {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            top: -65px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bloom 2s 3.8s ease-out backwards;
+        }
+
+        .edel-petal {
+            position: absolute;
+            width: 22px;
+            height: 48px;
+            left: 34px;
+            top: 0;
+            background: linear-gradient(180deg, #fff, #e9e4d9);
+            border-radius: 50% 50% 40% 40%;
+            transform-origin: 11px 45px;
+            box-shadow: 0 0 8px #fff8;
+        }
+
+        .edel-center {
+            position: absolute;
+            left: 30px;
+            top: 30px;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle, #f8d783, #b28a48);
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        /* PETAL RAIN */
+
+        .petal-rain {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 4;
+            overflow: hidden;
+        }
+
+        .falling-petal {
+            position: absolute;
+            top: -30px;
+            width: 9px;
+            height: 14px;
+            border-radius: 80% 0 80% 0;
+            background: linear-gradient(135deg, #ffe2e9, #d98ba9);
+            opacity: .7;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translate(0, -30px) rotate(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: .8;
+            }
+
+            100% {
+                transform: translate(var(--drift), 110vh) rotate(650deg);
+                opacity: 0;
+            }
+        }
+
+        /* ==================================
+        ROMANTIC MIXED FLOWER BOUQUET
+        ================================== */
+
+        .bouquet-garden {
+            height: 570px;
+            min-height: 570px;
+            align-items: flex-end;
+            overflow: visible;
+        }
+
+        .bouquet {
+            position: relative;
+            width: 360px;
+            max-width: 100%;
+            height: 440px;
+            margin: 0 auto;
+            transform: translateY(10px);
+        }
+
+        /* Individual flower */
+
+        .bouquet-flower {
+            position: absolute;
+            left: calc(50% + var(--x));
+            bottom: 30px;
+            height: var(--h);
+            width: 50px;
+            transform: translateX(-50%) scaleY(0);
+            transform-origin: bottom center;
+            animation: bouquetGrow 2.8s cubic-bezier(.2, .8, .3, 1) forwards;
+            animation-delay: var(--d);
+            z-index: 2;
+        }
+
+        @keyframes bouquetGrow {
+            0% {
+                transform: translateX(-50%) scaleY(0);
+            }
+
+            70% {
+                transform: translateX(-50%) scaleY(1.08);
+            }
+
+            100% {
+                transform: translateX(-50%) scaleY(1);
+            }
+        }
+
+        .bouquet-flower .stem {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(90deg,
+                    #25482e,
+                    #789d58,
+                    #345536);
+        }
+
+        .bouquet-flower .leaf {
+            position: absolute;
+            width: 38px;
+            height: 17px;
+            background: linear-gradient(135deg, #8da96b, #365c38);
+            border-radius: 100% 0 100% 0;
+        }
+
+        .bouquet-flower .leaf.left {
+            left: -34px;
+            top: 60%;
+            transform: rotate(10deg);
+        }
+
+        .bouquet-flower .leaf.right {
+            right: -34px;
+            top: 45%;
+            transform: rotate(75deg) scaleX(-1);
+        }
+
+        /* Sunflower */
+
+        .bouquet-flower .sun-head {
+            position: absolute;
+            width: 95px;
+            height: 95px;
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            transform-origin: center;
+            animation: headBloom 1.8s cubic-bezier(.2, .8, .3, 1) forwards;
+            animation-delay: calc(var(--d) + 1.8s);
+        }
+
+        .sun-petal {
+            position: absolute;
+            width: 23px;
+            height: 46px;
+            left: 36px;
+            top: 0;
+            transform-origin: 11px 46px;
+            background: linear-gradient(180deg, #fff2a8, #e5a12b);
+            border-radius: 50%;
+            box-shadow: 0 0 10px #f5c04b44;
+        }
+
+        .sun-center {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            left: 28px;
+            top: 28px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #b77a30, #613714);
+            border: 3px dotted #dba04c;
+            z-index: 3;
+        }
+
+        /* Edelweiss */
+
+        .bouquet-flower .edel-head {
+            position: absolute;
+            width: 78px;
+            height: 78px;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            transform-origin: center;
+            animation: headBloom 1.8s cubic-bezier(.2, .8, .3, 1) forwards;
+            animation-delay: calc(var(--d) + 1.8s);
+        }
+
+        .edel-petal {
+            position: absolute;
+            width: 17px;
+            height: 39px;
+            left: 30px;
+            top: 0;
+            transform-origin: 9px 38px;
+            background: linear-gradient(180deg, #fff, #e6e3d8);
+            border-radius: 50%;
+            box-shadow: 0 0 9px #ffffff70;
+        }
+
+        .edel-center {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            left: 26px;
+            top: 26px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fce6a1, #b68b47);
+            z-index: 3;
+        }
+
+        @keyframes headBloom {
+            0% {
+                transform: translateX(-50%) scale(0) rotate(-20deg);
+            }
+
+            75% {
+                transform: translateX(-50%) scale(1.12) rotate(5deg);
+            }
+
+            100% {
+                transform: translateX(-50%) scale(1) rotate(0);
+            }
+        }
+
+        /* Bouquet wrapper */
+
+        .bouquet-wrap {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 210px;
+            height: 135px;
+            z-index: 5;
+            background: linear-gradient(120deg,
+                    #574337,
+                    #a17c60,
+                    #49372f);
+            clip-path: polygon(8% 0, 92% 0, 72% 100%, 28% 100%);
+            opacity: 0;
+            animation: wrapAppear 1.5s 4s ease forwards;
+        }
+
+        @keyframes wrapAppear {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) scaleY(0);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(-50%) scaleY(1);
+            }
+        }
+
+        .ribbon {
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90px;
+            height: 15px;
+            background: linear-gradient(90deg, #e4a4b5, #f5d1d5, #cf8a9e);
+            border-radius: 50%;
+            box-shadow: 0 3px 8px #0005;
+        }
+
+        .ribbon-tail {
+            position: absolute;
+            top: 43px;
+            width: 25px;
+            height: 48px;
+            background: linear-gradient(90deg, #ce8a9d, #f1b9c8);
+            clip-path: polygon(0 0, 100% 0, 80% 100%, 50% 80%, 20% 100%);
+        }
+
+        .left-tail {
+            left: 75px;
+            transform: rotate(25deg);
+        }
+
+        .right-tail {
+            right: 75px;
+            transform: rotate(-25deg);
+        }
+
+        @media(max-width: 500px) {
+            .bouquet-garden {
+                height: 480px;
+                min-height: 480px;
+            }
+
+            .bouquet {
+                transform: scale(.83) translateY(10px);
+                transform-origin: bottom center;
+            }
+        }
+
+        /* FINAL LETTER */
+
+        #final {
+            background: radial-gradient(ellipse at center, #20121c 0%, #09070b 55%, #050507 100%);
+        }
+
+        .letter-card {
+            padding: 45px 30px;
+            border: 1px solid #ffffff17;
+            background: #ffffff08;
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 20px 80px #0008;
+        }
+
+        .heart {
+            font-size: 35px;
+            color: #f2a9bd;
+            margin-bottom: 25px;
+            animation: heartbeat 1.6s infinite;
+        }
+
+        @keyframes heartbeat {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            15% {
+                transform: scale(1.18);
+            }
+
+            30% {
+                transform: scale(1);
+            }
+
+            45% {
+                transform: scale(1.12);
+            }
+        }
+
+        .letter-title {
+            font-size: clamp(32px, 7vw, 45px);
+            margin-bottom: 25px;
+        }
+
+        .letter-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            line-height: 2.1;
+            color: #d4c6d0;
+            margin-bottom: 30px;
+        }
+
+        .signature {
+            border-top: 1px solid #ffffff20;
+            padding-top: 25px;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 20px;
+            color: var(--pink);
+            line-height: 1.8;
+        }
+
+        .signature strong {
+            display: block;
+            font-style: normal;
+            font-size: 25px;
+            color: var(--gold);
+            margin-top: 10px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            color: #77717a;
+            font-size: 9px;
+            letter-spacing: 3px;
+        }
+
+        .error {
+            color: #f2a9bd;
+            font-size: 11px;
+            margin-top: 12px;
+            min-height: 16px;
+        }
+
+        @media (max-width: 500px) {
+            .garden {
+                height: 48vh;
+            }
+
+            .sunflower {
+                left: calc(50% + 40px);
+            }
+
+            .edelweiss {
+                left: calc(50% - 100px);
+            }
+
+            .stem {
+                height: 140px;
+            }
+
+            .edelweiss .stem {
+                height: 110px;
+            }
+
+            .letter-card {
+                padding: 35px 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="stars" id="stars"></div>
+    <div class="glow"></div>
+    <div class="petal-rain" id="petalRain"></div>
+
+    <!-- SCREEN 1: INTRO -->
+
+    <section class="screen active" id="intro">
+        <div class="content">
+
+            <div class="eyebrow">✦ A Little Something For You ✦</div>
+
+            <h1 class="main-title">
+                Hey, <em>you.</em>
+            </h1>
+
+            <p class="description">
+                I made a little corner of the universe just for someone special.
+                Before we begin, tell me your name.
+            </p>
+
+            <input type="text" class="name-input" id="targetName" placeholder="Your beautiful name..." maxlength="40"
+                autocomplete="off">
+
+            <button class="primary-btn" onclick="startQuestions()">
+                LET'S BEGIN ♡
+            </button>
+
+            <div class="error" id="nameError"></div>
+
+            <div class="footer">MADE WITH A LITTLE TOO MUCH LOVE</div>
+
+        </div>
+    </section>
+
+    <!-- SCREEN 2: QUESTIONS -->
+
+    <section class="screen" id="questions">
+
+        <div class="content">
+
+            <div class="eyebrow">✦ Five Little Questions ✦</div>
+
+            <div class="progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <div class="question-number" id="questionNumber">
+                QUESTION 01 / 05
+            </div>
+
+            <h2 class="question-title" id="questionText">
+                Do you love me?
+            </h2>
+
+            <p class="question-subtitle">
+                Be honest... but I already know the answer ♡
+            </p>
+
+            <div class="answer-area">
+
+                <button class="answer-btn yes-btn" onclick="answerYes()">
+                    YES ♡
+                </button>
+
+                <button class="answer-btn no-btn" id="noButton" onmouseenter="runAway()" onclick="runAway()"
+                    ontouchstart="runAway()">
+                    NO
+                </button>
+
+            </div>
+
+            <div class="footer">THERE IS ONLY ONE RIGHT ANSWER</div>
+
+        </div>
+    </section>
+
+    <!-- SCREEN 3: FLOWER GARDEN -->
+
+    <section class="screen" id="garden">
+
+        <div class="garden-heading">
+            <div class="eyebrow">✦ A Garden Just For You ✦</div>
+            <h2>Something Beautiful Takes Time</h2>
+            <p>JUST LIKE THE LOVE I'M GROWING FOR YOU</p>
+        </div>
+
+        <div class="garden bouquet-garden">
+
+            <div class="bouquet">
+
+                <!-- BACK FLOWERS -->
+                <div class="bouquet-flower sunflower" style="--x:-100px;--h:175px;--s:.85;--d:1.2s">
+                    <div class="stem">
+                        <div class="leaf left"></div>
+                        <div class="leaf right"></div>
+                    </div>
+                    <div class="sun-head"></div>
+                </div>
+
+                <div class="bouquet-flower edelweiss" style="--x:-65px;--h:145px;--s:.75;--d:1.8s">
+                    <div class="stem">
+                        <div class="leaf left"></div>
+                    </div>
+                    <div class="edel-head"></div>
+                </div>
+
+                <div class="bouquet-flower sunflower" style="--x:0px;--h:220px;--s:1.05;--d:.5s">
+                    <div class="stem">
+                        <div class="leaf left"></div>
+                        <div class="leaf right"></div>
+                    </div>
+                    <div class="sun-head"></div>
+                </div>
+
+                <div class="bouquet-flower edelweiss" style="--x:65px;--h:155px;--s:.8;--d:2s">
+                    <div class="stem">
+                        <div class="leaf right"></div>
+                    </div>
+                    <div class="edel-head"></div>
+                </div>
+
+                <div class="bouquet-flower sunflower" style="--x:105px;--h:180px;--s:.85;--d:1.5s">
+                    <div class="stem">
+                        <div class="leaf left"></div>
+                    </div>
+                    <div class="sun-head"></div>
+                </div>
+
+                <!-- MIDDLE FLOWERS -->
+                <div class="bouquet-flower edelweiss" style="--x:-125px;--h:125px;--s:.65;--d:2.3s">
+                    <div class="stem">
+                        <div class="leaf right"></div>
+                    </div>
+                    <div class="edel-head"></div>
+                </div>
+
+                <div class="bouquet-flower edelweiss" style="--x:-40px;--h:165px;--s:.85;--d:1.9s">
+                    <div class="stem">
+                        <div class="leaf left"></div>
+                    </div>
+                    <div class="edel-head"></div>
+                </div>
+
+                <div class="bouquet-flower edelweiss" style="--x:40px;--h:140px;--s:.7;--d:2.5s">
+                    <div class="stem">
+                        <div class="leaf right"></div>
+                    </div>
+                    <div class="edel-head"></div>
+                </div>
+
+                <div class="bouquet-flower edelweiss" style="--x:125px;--h:125px;--s:.65;--d:2.1s">
+                    <div class="stem">
+                        <div class="leaf left"></div>
+                    </div>
+                    <div class="edel-head"></div>
+                </div>
+
+                <!-- FRONT FLOWERS -->
+                <div class="bouquet-flower sunflower" style="--x:-65px;--h:125px;--s:.72;--d:2.8s">
+                    <div class="stem">
+                        <div class="leaf left"></div>
+                    </div>
+                    <div class="sun-head"></div>
+                </div>
+
+                <div class="bouquet-flower edelweiss" style="--x:-100px;--h:105px;--s:.58;--d:3s">
+                    <div class="stem">
+                        <div class="leaf right"></div>
+                    </div>
+                    <div class="edel-head"></div>
+                </div>
+
+                <div class="bouquet-flower edelweiss" style="--x:0px;--h:115px;--s:.65;--d:3.2s">
+                    <div class="stem">
+                        <div class="leaf left"></div>
+                    </div>
+                    <div class="edel-head"></div>
+                </div>
+
+                <div class="bouquet-flower sunflower" style="--x:65px;--h:130px;--s:.7;--d:2.6s">
+                    <div class="stem">
+                        <div class="leaf right"></div>
+                    </div>
+                    <div class="sun-head"></div>
+                </div>
+
+                <div class="bouquet-flower edelweiss" style="--x:100px;--h:100px;--s:.55;--d:3.3s">
+                    <div class="stem">
+                        <div class="leaf left"></div>
+                    </div>
+                    <div class="edel-head"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="content" style="padding: 25px 0 55px;">
+            <p class="description" style="margin-bottom: 20px;">
+                Edelweiss, a symbol of everlasting love.
+                Sunflowers, always finding their way to the light.
+                And somehow, both remind me of you.
+            </p>
+
+            <button class="primary-btn" onclick="showFinal()">
+                ONE LAST THING ♡
+            </button>
+        </div>
+
+    </section>
+
+    <!-- SCREEN 4: LOVE LETTER -->
+
+    <section class="screen" id="final">
+
+        <div class="content">
+
+            <div class="letter-card">
+
+                <div class="heart">♥</div>
+
+                <div class="eyebrow">✦ A Letter From My Heart ✦</div>
+
+                <h2 class="letter-title">
+                    To My Dearest,
+                    <em id="finalName" style="color:var(--pink);"></em>
+                </h2>
+
+                <p class="letter-text">
+                    If I could choose one person to walk through every season
+                    of life with, it would always be you.
+
+                    <br><br>
+
+                    I don't promise that every day will be perfect,
+                    but I promise to keep choosing you, even on the days
+                    when everything feels a little harder.
+
+                    <br><br>
+
+                    I want to celebrate your happiest moments,
+                    hold your hand through your hardest ones,
+                    and create a thousand little memories together.
+
+                    <br><br>
+
+                    Like the Edelweiss that blooms through the cold,
+                    and the sunflower that always seeks the light,
+                    my heart will always find its way back to you.
+
+                    <br><br>
+
+                    You are not just a chapter in my story.
+                    You are the place where I want every story to begin
+                    and end.
+                </p>
+
+                <div class="signature">
+                    From All Journeys,<br>
+                    Always Return to you.
+
+                    <strong id="signatureName"></strong>
+                </div>
+
+            </div>
+
+            <div class="footer">
+                IN EVERY UNIVERSE, IT'S STILL YOU ♡
+            </div>
+
+        </div>
+
+    </section>
+
+    <script>
+        // ======================================
+        // BACKGROUND STARS
+        // ======================================
+
+        const stars = document.getElementById('stars');
+
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 4 + 's';
+            star.style.animationDuration = (2 + Math.random() * 4) + 's';
+
+            stars.appendChild(star);
+        }
+
+        // ======================================
+        // FLOWER PETALS
+        // ======================================
+
+        function createPetal() {
+            const rain = document.getElementById('petalRain');
+
+            const petal = document.createElement('div');
+
+            petal.className = 'falling-petal';
+
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.animationDuration = (5 + Math.random() * 6) + 's';
+            petal.style.animationDelay = Math.random() * 2 + 's';
+            petal.style.setProperty('--drift', (Math.random() * 180 - 90) + 'px');
+
+            const colors = [
+                '#f4b9c9',
+                '#fff0f3',
+                '#e8c77b',
+                '#d9a7b7'
+            ];
+
+            petal.style.background = colors[
+                Math.floor(Math.random() * colors.length)
+            ];
+
+            rain.appendChild(petal);
+
+            setTimeout(() => petal.remove(), 12000);
+        }
+
+        let petalInterval;
+
+        function startPetalRain() {
+            if (petalInterval) clearInterval(petalInterval);
+
+            for (let i = 0; i < 20; i++) {
+                setTimeout(createPetal, i * 150);
+            }
+
+            petalInterval = setInterval(createPetal, 250);
+        }
+
+        // ======================================
+        // FLOWER HEADS
+        // ======================================
+
+        function createFlowerPetals() {
+
+            document.querySelectorAll('.sun-head').forEach(head => {
+
+                if (head.dataset.created) return;
+                head.dataset.created = 'true';
+
+                for (let i = 0; i < 16; i++) {
+                    const petal = document.createElement('div');
+
+                    petal.className = 'sun-petal';
+                    petal.style.transform = `rotate(${i * 22.5}deg)`;
+
+                    head.appendChild(petal);
+                }
+
+                const center = document.createElement('div');
+                center.className = 'sun-center';
+                head.appendChild(center);
+            });
+
+            document.querySelectorAll('.edel-head').forEach(head => {
+
+                if (head.dataset.created) return;
+                head.dataset.created = 'true';
+
+                for (let i = 0; i < 12; i++) {
+                    const petal = document.createElement('div');
+
+                    petal.className = 'edel-petal';
+                    petal.style.transform = `rotate(${i * 30}deg)`;
+
+                    head.appendChild(petal);
+                }
+
+                const center = document.createElement('div');
+                center.className = 'edel-center';
+                head.appendChild(center);
+            });
+        }
+
+        createFlowerPetals();
+
+        createFlowerPetals();
+
+        // ======================================
+        // SCREEN NAVIGATION
+        // ======================================
+
+        function changeScreen(id) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+
+            document.getElementById(id).classList.add('active');
+
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // ======================================
+        // NAME INPUT
+        // ======================================
+
+        let targetName = '';
+
+        function startQuestions() {
+            const input = document.getElementById('targetName');
+
+            targetName = input.value.trim();
+
+            if (!targetName) {
+                document.getElementById('nameError').textContent =
+                    'You forgot to tell me your name... ♡';
+
+                input.focus();
+                return;
+            }
+
+            document.getElementById('nameError').textContent = '';
+
+            changeScreen('questions');
+
+            showQuestion();
+        }
+
+        // ======================================
+        // QUESTIONS
+        // ======================================
+
+        const questionList = [
+            "Do you love me?",
+            "You don't want to lose me, right?",
+            "Are you deeply, madly in love with me?",
+            "Would you want to stay by my side forever?",
+            "Would you marry me someday?"
+        ];
+
+        let currentQuestion = 0;
+
+        function showQuestion() {
+            const number = currentQuestion + 1;
+
+            document.getElementById('questionNumber').textContent =
+                `QUESTION ${String(number).padStart(2, '0')} / 05`;
+
+            document.getElementById('questionText').textContent =
+                questionList[currentQuestion];
+
+            document.getElementById('progressBar').style.width =
+                (currentQuestion / questionList.length * 100) + '%';
+
+            resetNoButton();
+        }
+
+        function answerYes() {
+            currentQuestion++;
+
+            if (currentQuestion >= questionList.length) {
+                document.getElementById('progressBar').style.width = '100%';
+
+                setTimeout(() => {
+                    changeScreen('garden');
+                    startPetalRain();
+                }, 350);
+
+                return;
+            }
+
+            showQuestion();
+        }
+
+        // ======================================
+        // THE NO BUTTON THAT ALWAYS RUNS AWAY
+        // ======================================
+
+        const noButton = document.getElementById('noButton');
+
+        function resetNoButton() {
+            noButton.classList.remove('running');
+
+            noButton.style.position = 'relative';
+            noButton.style.left = '0';
+            noButton.style.top = '0';
+            noButton.style.transform = 'none';
+        }
+
+        function runAway() {
+            const padding = 15;
+
+            noButton.classList.add('running');
+
+            const maxX = window.innerWidth - noButton.offsetWidth - padding;
+            const maxY = window.innerHeight - noButton.offsetHeight - padding;
+
+            let x, y;
+
+            const currentRect = noButton.getBoundingClientRect();
+
+            do {
+                x = padding + Math.random() * Math.max(0, maxX - padding);
+                y = padding + Math.random() * Math.max(0, maxY - padding);
+            } while (
+                Math.abs(x - currentRect.left) < 150 &&
+                Math.abs(y - currentRect.top) < 100
+            );
+
+            noButton.style.left = x + 'px';
+            noButton.style.top = y + 'px';
+        }
+
+        // ======================================
+        // FINAL LOVE LETTER
+        // ======================================
+
+        function showFinal() {
+            document.getElementById('finalName').textContent = targetName;
+            document.getElementById('signatureName').textContent = targetName;
+
+            changeScreen('final');
+
+            startPetalRain();
+        }
+
+    </script>
+
+</body>
+
+</html>
